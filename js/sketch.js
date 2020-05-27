@@ -8,14 +8,10 @@ let ball = {
     speedY: 0,
     radius: 40
 }
-let paddleLeft;
 
-let paddleRight = {
-    x: 0,
-    y: 0,
-    width: 20,
-    height: 150
-}
+let paddleLeft;
+let paddleRight;
+
 
 
 function setup() {
@@ -24,6 +20,7 @@ function setup() {
     noStroke();
 
     paddleLeft = new PaddleLeft(30, 0, 20, 150);
+    paddleRight = new PaddleRight(0, 0, 20, 150);
 
     ball.x = width / 2;
     ball.y = height / 2;
@@ -40,11 +37,14 @@ function draw() {
 
     paddleLeft.afficher();
     paddleLeft.bouger();
+
+    paddleRight.afficher();
+    paddleRight.bouger();
 }
 
 function drawElements() {
-    paddleRight.y = mouseY;
-    rect(paddleRight.x, paddleRight.y, paddleRight.width, paddleRight.height);
+    // paddleRight.y = mouseY;
+    // rect(paddleRight.x, paddleRight.y, paddleRight.width, paddleRight.height);
     ellipse(ball.x, ball.y, ball.radius);
     textSize(100);
     textAlign(RIGHT)
@@ -89,10 +89,6 @@ function bounceBall() {
     }
 }
 
-function movePaddle() {
-    paddleRight.y = mouseY;
-}
-
 class PaddleLeft {
     constructor(x, y, width, height) {
         this.x = x;
@@ -106,6 +102,22 @@ class PaddleLeft {
     }
     bouger() {
         this.y = mouseX;
+    }
+}
+
+class PaddleRight {
+    constructor(x, y, width, height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+    afficher() {
+        this.y = mouseY;
+        rect(this.x, this.y, this.width, this.height);
+    }
+    bouger() {
+        this.y = mouseY;
     }
 }
 
