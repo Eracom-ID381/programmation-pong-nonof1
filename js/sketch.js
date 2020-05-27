@@ -8,13 +8,7 @@ let ball = {
     speedY: 0,
     radius: 40
 }
-
-let paddleLeft = {
-    x: 30,
-    y: 0,
-    width: 20,
-    height: 150
-}
+let paddleLeft;
 
 let paddleRight = {
     x: 0,
@@ -29,6 +23,8 @@ function setup() {
     rectMode(CENTER);
     noStroke();
 
+    paddleLeft = new PaddleLeft(30, 0, 20, 150);
+
     ball.x = width / 2;
     ball.y = height / 2;
 
@@ -41,12 +37,13 @@ function draw() {
     moveBall();
     bounceBall();
     drawElements();
+
+    paddleLeft.afficher();
+    paddleLeft.bouger();
 }
 
 function drawElements() {
     paddleRight.y = mouseY;
-    paddleLeft.y = mouseX;
-    rect(paddleLeft.x, paddleLeft.y, paddleLeft.width, paddleLeft.height);
     rect(paddleRight.x, paddleRight.y, paddleRight.width, paddleRight.height);
     ellipse(ball.x, ball.y, ball.radius);
     textSize(100);
@@ -54,7 +51,7 @@ function drawElements() {
     text(scoreLeft, width / 2 - 40, 100);
     textAlign(LEFT)
 
-    text(scoreRight, width/2 + 40 , 100);
+    text(scoreRight, width / 2 + 40, 100);
 
     for (let y = 0; y < height; y = y + 30) {
         rect(width / 2, y, 20, 20);
@@ -70,7 +67,7 @@ function bounceBall() {
         ball.speedY = random(-5, 5);
     }
 
-    // Detection de collision Paddle Left 
+    // Detection de collision Paddle Left
     if (ball.x <= paddleLeft.x + paddleLeft.width * 2 &&
         ball.y >= paddleLeft.y - paddleLeft.height / 2 &&
         ball.y <= paddleLeft.y + paddleLeft.height / 2) {
@@ -94,7 +91,22 @@ function bounceBall() {
 
 function movePaddle() {
     paddleRight.y = mouseY;
-    paddleLeft.y = mouseX;
+}
+
+class PaddleLeft {
+    constructor(x, y, width, height) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    }
+    afficher() {
+        this.y = mouseX;
+        rect(this.x, this.y, this.width, this.height);
+    }
+    bouger() {
+        this.y = mouseX;
+    }
 }
 
 function moveBall() {
