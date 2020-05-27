@@ -1,16 +1,17 @@
 let scoreLeft = 0;
 let scoreRight = 0;
 
-let ball = {
-    x: 0,
-    y: 0,
-    speedX: 10,
-    speedY: 0,
-    radius: 40
-}
+// let ball = {
+//     x: 0,
+//     y: 0,
+//     speedX: 10,
+//     speedY: 0,
+//     radius: 40
+// }
 
 let paddleLeft;
 let paddleRight;
+let ball;
 
 
 
@@ -21,6 +22,7 @@ function setup() {
 
     paddleLeft = new PaddleLeft(30, 0, 20, 150);
     paddleRight = new PaddleRight(0, 0, 20, 150);
+    ball = new Ball(0, 0, 10, 0, 40);
 
     ball.x = width / 2;
     ball.y = height / 2;
@@ -40,12 +42,12 @@ function draw() {
 
     paddleRight.afficher();
     paddleRight.bouger();
+
+    ball.afficher();
 }
 
 function drawElements() {
-    // paddleRight.y = mouseY;
-    // rect(paddleRight.x, paddleRight.y, paddleRight.width, paddleRight.height);
-    ellipse(ball.x, ball.y, ball.radius);
+    // ellipse(ball.x, ball.y, ball.radius);
     textSize(100);
     textAlign(RIGHT)
     text(scoreLeft, width / 2 - 40, 100);
@@ -118,6 +120,18 @@ class PaddleRight {
     }
     bouger() {
         this.y = mouseY;
+    }
+}
+class Ball {
+    constructor(x, y, speedX, speedY, radius) {
+        this.x = x;
+        this.y = y;
+        this.speedX = speedX;
+        this.speedY = speedY;
+        this.radius = radius;
+    }
+    afficher() {
+        ellipse(this.x, this.y, this.radius);
     }
 }
 
