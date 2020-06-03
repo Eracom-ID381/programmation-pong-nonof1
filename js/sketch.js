@@ -1,5 +1,8 @@
 let scoreLeft = 0;
 let scoreRight = 0;
+let player1;
+let player2;
+
 
 // let ball = {
 //     x: 0,
@@ -35,6 +38,9 @@ function setup() {
     }
     // let ball = new Ball(0, 0, 10, 0, 40);
 
+    player1 = prompt('Joueur 1:');
+    player2 = prompt('Joueur 2:');
+
 
 }
 
@@ -68,6 +74,11 @@ function drawStadium() {
     for (let y = 0; y < height; y = y + 30) {
         rect(width / 2, y, 20, 20);
     }
+    textSize(50);
+    textAlign(LEFT);
+    text(player1, 80, 50);
+    textAlign(RIGHT);
+    text(player2, width - 80, 50);
 }
 
 class Paddle {
