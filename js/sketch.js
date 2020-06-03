@@ -135,14 +135,15 @@ class Ball {
             }
         }
 
-        // Check for bounce against edges
+        // Check
+        // for bounce against edges
         if (this.y > height - this.radius / 2 || this.y < 0 + this.radius / 2) {
             this.speedY = -this.speedY;
             if (this.x > width) {
-                resetBall('left');
+                resetBall();
                 scoreLeft += 1;
             } else if (this.x < 0) {
-                resetBall('right');
+                resetBall();
                 scoreRight += 1;
             }
         }
@@ -152,10 +153,10 @@ class Ball {
     score() {
         if (this.enabled && this.x < 0) {
             scoreRight += 1;
-            this.enabled = false;
+            this.resetBall();
         } else if (this.enabled && this.x > width) {
             scoreLeft += 1;
-            this.enabled = false;
+            this.resetBall();
         }
     }
     resetBall() {
