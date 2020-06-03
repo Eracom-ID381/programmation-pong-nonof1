@@ -20,8 +20,8 @@ function setup() {
     rectMode(CENTER);
     noStroke();
 
-    paddleLeft = new PaddleLeft(30, 0, 20, 150);
-    paddleRight = new PaddleRight(0, 0, 20, 150);
+    paddleLeft = new Paddle(30, 0, 20, 150);
+    paddleRight = new Paddle(0, 0, 20, 150);
     ball = new Ball(0, 0, 10, 0, 40);
 
     ball.x = width / 2;
@@ -37,11 +37,11 @@ function draw() {
     bounceBall();
     drawElements();
 
-    paddleLeft.afficher();
-    paddleLeft.bouger();
+    paddleLeft.afficherLeft();
+    paddleLeft.bougerLeft();
 
-    paddleRight.afficher();
-    paddleRight.bouger();
+    paddleRight.afficherRight();
+    paddleRight.bougerRight();
 
     ball.afficher();
 }
@@ -91,37 +91,29 @@ function bounceBall() {
     }
 }
 
-class PaddleLeft {
+class Paddle {
     constructor(x, y, width, height) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
     }
-    afficher() {
+    afficherLeft() {
         this.y = mouseX;
         rect(this.x, this.y, this.width, this.height);
     }
-    bouger() {
+    afficherRight() {
+        this.y = mouseY;
+        rect(this.x, this.y, this.width, this.height);
+    }
+    bougerLeft() {
         this.y = mouseX;
+    }
+    bougerRight() {
+        this.y = mouseY;
     }
 }
 
-class PaddleRight {
-    constructor(x, y, width, height) {
-        this.x = x;
-        this.y = y;
-        this.width = width;
-        this.height = height;
-    }
-    afficher() {
-        this.y = mouseY;
-        rect(this.x, this.y, this.width, this.height);
-    }
-    bouger() {
-        this.y = mouseY;
-    }
-}
 class Ball {
     constructor(x, y, speedX, speedY, radius) {
         this.x = x;
