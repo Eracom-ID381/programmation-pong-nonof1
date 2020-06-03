@@ -9,59 +9,54 @@ let scoreRight = 0;
 //     radius: 40
 // }
 
+
 let paddleLeft;
 let paddleRight;
-let ball;
-let hue;
-let sat;
-let bright;
-let hue02;
-let sat02;
-let bright02;
+
+let paddles = [];
+let balls = [];
 
 
 
 function setup() {
     createCanvas(window.innerWidth, window.innerHeight);
-    rectMode(CENTER);
     noStroke();
     colorMode(HSB, 100);
 
-    hue = random(0, 100);
-    sat = random(50, 100);
-    bright = random(50, 100);
 
-    hue02 = random(0, 100);
-    sat02 = random(50, 100);
-    bright02 = random(50, 100);
+    paddleLeft = new Paddle(30, 0, 20, 150, 'mouseX');
+    paddleRight = new Paddle(width - 30, 0, 20, 150, 'mouseY');
 
-    paddleLeft = new Paddle(30, 0, 20, 150);
-    paddleRight = new Paddle(0, 0, 20, 150);
-    ball = new Ball(0, 0, 10, 0, 40);
+    paddles.push(paddleLeft);
+    paddles.push(paddleRight);
 
-    ball.x = width / 2;
-    ball.y = height / 2;
+    for (let i = 0; i < 400; i += 1) {
+        balls[i] = new Ball(width / 2, height / 2, 30, random(-10, 10), random(-10, 10));
+    }
+    // let ball = new Ball(0, 0, 10, 0, 40);
 
-    paddleRight.x = width - 30;
+
 }
 
 function draw() {
     background(0);
     fill(255);
-    moveBall();
-    bounceBall();
-    drawElements();
+    drawStadium();
 
-    paddleLeft.afficherLeft();
-    paddleLeft.bougerLeft();
+    for (let i = 0; i < paddles.length; i += 1) { 
+        paddles[i].afficher();
+        paddles[i].bouger();
+    }
 
-    paddleRight.afficherRight();
-    paddleRight.bougerRight();
-
-    ball.afficher();
+    for (let i = 0; i < balls.length; i += 1) {
+        balls[i].afficher();
+        balls[i].bouger();
+        balls[i].rebondir();
+        balls[i].score();
+    }
 }
 
-function drawElements() {
+function drawStadium() {
     // ellipse(ball.x, ball.y, ball.radius);
     textSize(100);
     textAlign(RIGHT)
@@ -75,92 +70,87 @@ function drawElements() {
     }
 }
 
-function bounceBall() {
-    // Detection de collision Paddle Right
-    if (ball.x >= paddleRight.x - paddleRight.width * 2 &&
-        ball.y >= paddleRight.y - paddleRight.height / 2 &&
-        ball.y <= paddleRight.y + paddleRight.height / 2) {
-        ball.speedX = -ball.speedX;
-        ball.speedY = random(-5, 5);
-        hue02 = random(0, 100);
-        sat02 = random(50, 100);
-        bright02 = random(50, 100);
-    }
-
-    // Detection de collision Paddle Left
-    if (ball.x <= paddleLeft.x + paddleLeft.width * 2 &&
-        ball.y >= paddleLeft.y - paddleLeft.height / 2 &&
-        ball.y <= paddleLeft.y + paddleLeft.height / 2) {
-        ball.speedX = -ball.speedX;
-        ball.speedY = random(-5, 5);
-        hue = random(0, 100);
-        sat = random(50, 100);
-        bright = random(50, 100);
-    }
-
-    // Detection collision "murs" haut et bas
-    if (ball.y <= ball.radius || ball.y >= height - ball.radius) {
-        ball.speedY = -ball.speedY;
-    }
-
-    if (ball.x > width) {
-        resetBall('left');
-        scoreLeft += 1;
-    } else if (ball.x < 0) {
-        resetBall('right');
-        scoreRight += 1;
-    }
-}
-
 class Paddle {
-    constructor(x, y, width, height) {
+    constructor(x, y, width, height, axis) {
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.hue = 0;
+        this.brightness = 255;
+        this.saturation = 0;
+        this.axis = axis;
     }
-    afficherLeft() {
-        this.y = mouseX;
+    afficher() {
+        fill(this.hue, this.saturation, this.brightness);
         rect(this.x, this.y, this.width, this.height);
-        fill(hue02, sat02, bright02);
     }
-    afficherRight() {
-        this.y = mouseY;
-        rect(this.x, this.y, this.width, this.height);
-        fill(hue, sat, bright);
+
+    bouger() {
+        if (this.axis == 'mouseX') {
+            this.y = mouseX;
+        } else if (this.axis == 'mouseY') {
+            this.y = mouseY;
+        }
     }
-    bougerLeft() {
-        this.y = mouseX;
+    changeColor(hue, saturation, brightness) {
+        this.hue = hue;
+        this.saturation = saturation;
+        this.brightness = brightness;
     }
-    bougerRight() {
-        this.y = mouseY;
-    }
+
 }
 
 class Ball {
-    constructor(x, y, speedX, speedY, radius) {
-        this.x = x;
-        this.y = y;
-        this.speedX = speedX;
-        this.speedY = speedY;
-        this.radius = radius;
+    constructor(_x, _y, _radius, _speedX, _speedY) {
+        this.x = _x;
+        this.y = _y;
+        this.radius = _radius;
+        this.speedX = _speedX;
+        this.speedY = _speedY;
+        this.distances = [];
+        this.enabled = true;
+        this.col = color(0, 0, 255);
     }
+
     afficher() {
+        fill(this.col);
         ellipse(this.x, this.y, this.radius);
     }
-}
+    bouger() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+    }
 
-function moveBall() {
-    ball.x += ball.speedX;
-    ball.y += ball.speedY;
-}
+    rebondir() {
+        // Check for bounce against paddles
+        for (let i = 0; i < paddles.length; i += 1) {
+            if (this.x + this.radius / 2 > paddles[i].x &&
+                this.x - this.radius / 2 < paddles[i].x + paddles[i].width &&
+                this.y > paddles[i].y && this.y < paddles[i].y + paddles[i].height) {
+                this.speedX = -this.speedX;
+                this.speedY = random(-5, 5);
+                let randomHue = random(0, 255);
+                paddles[i].changeColor(randomHue,255,255);
+            }
+        }
 
-function resetBall() {
-    ball.x = width / 2;
-    ball.y = height / 2;
-    ball.speedX = -ball.speedX;
-    ball.speedY = random(-2, 2);
+        // Check for bounce against edges
+        if (this.y > height - this.radius / 2 || this.y < 0 + this.radius / 2) {
+            this.speedY = -this.speedY;
+        }
 
+    }
+
+    score() {
+        if (this.enabled && this.x < 0) {
+            scoreRight += 1;
+            this.enabled = false;
+        } else if (this.enabled && this.x > width) {
+            scoreLeft += 1;
+            this.enabled = false;
+        }
+    }
 }
 
 function windowResized() {
