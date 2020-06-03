@@ -12,6 +12,12 @@ let scoreRight = 0;
 let paddleLeft;
 let paddleRight;
 let ball;
+let hue;
+let sat;
+let bright;
+let hue02;
+let sat02;
+let bright02;
 
 
 
@@ -19,6 +25,15 @@ function setup() {
     createCanvas(window.innerWidth, window.innerHeight);
     rectMode(CENTER);
     noStroke();
+    colorMode(HSB, 100);
+
+    hue = random(0, 100);
+    sat = random(50, 100);
+    bright = random(50, 100);
+
+    hue02 = random(0, 100);
+    sat02 = random(50, 100);
+    bright02 = random(50, 100);
 
     paddleLeft = new Paddle(30, 0, 20, 150);
     paddleRight = new Paddle(0, 0, 20, 150);
@@ -67,6 +82,7 @@ function bounceBall() {
         ball.y <= paddleRight.y + paddleRight.height / 2) {
         ball.speedX = -ball.speedX;
         ball.speedY = random(-5, 5);
+        fill(hue, sat, bright);
     }
 
     // Detection de collision Paddle Left
@@ -75,6 +91,7 @@ function bounceBall() {
         ball.y <= paddleLeft.y + paddleLeft.height / 2) {
         ball.speedX = -ball.speedX;
         ball.speedY = random(-5, 5);
+        fill(hue, sat, bright);
     }
 
     // Detection collision "murs" haut et bas
@@ -101,10 +118,12 @@ class Paddle {
     afficherLeft() {
         this.y = mouseX;
         rect(this.x, this.y, this.width, this.height);
+        fill(hue02, sat02, bright02);
     }
     afficherRight() {
         this.y = mouseY;
         rect(this.x, this.y, this.width, this.height);
+        fill(hue, sat, bright);
     }
     bougerLeft() {
         this.y = mouseX;
