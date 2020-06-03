@@ -30,7 +30,7 @@ function setup() {
     paddles.push(paddleLeft);
     paddles.push(paddleRight);
 
-    for (let i = 0; i < 400; i += 1) {
+    for (let i = 0; i < 1; i += 1) {
         balls[i] = new Ball(width / 2, height / 2, 30, random(-10, 10), random(-10, 10));
     }
     // let ball = new Ball(0, 0, 10, 0, 40);
@@ -43,7 +43,7 @@ function draw() {
     fill(255);
     drawStadium();
 
-    for (let i = 0; i < paddles.length; i += 1) { 
+    for (let i = 0; i < paddles.length; i += 1) {
         paddles[i].afficher();
         paddles[i].bouger();
     }
@@ -131,13 +131,20 @@ class Ball {
                 this.speedX = -this.speedX;
                 this.speedY = random(-5, 5);
                 let randomHue = random(0, 255);
-                paddles[i].changeColor(randomHue,255,255);
+                paddles[i].changeColor(randomHue, 255, 255);
             }
         }
 
         // Check for bounce against edges
         if (this.y > height - this.radius / 2 || this.y < 0 + this.radius / 2) {
             this.speedY = -this.speedY;
+            if (this.x > width) {
+                resetBall('left');
+                scoreLeft += 1;
+            } else if (this.x < 0) {
+                resetBall('right');
+                scoreRight += 1;
+            }
         }
 
     }
@@ -151,7 +158,14 @@ class Ball {
             this.enabled = false;
         }
     }
+    resetBall() {
+        this.x = width / 2;
+        this.y = height / 2;
+        this.speedX = -this.speedX;
+        this.speedY = random(-2, 2);
+    }
 }
+
 
 function windowResized() {
     resizeCanvas(window.innerWidth, window.innerHeight);
