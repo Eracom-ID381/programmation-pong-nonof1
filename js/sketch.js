@@ -179,10 +179,10 @@ class Ball {
         this.speedY = random(-2, 2);
     }
     winner() {
-        if (scoreRight > 2) {
+        if (scoreRight > 10) {
             alert(player2 + ' a gagné !');
             this.newgame();
-        } else if (scoreLeft > 2) {
+        } else if (scoreLeft > 10) {
             alert(player1 + ' a gagné');
             this.newgame();
         }
@@ -192,6 +192,7 @@ class Ball {
         x = confirm('Voulez-vous rejouer ?');
         if (x == true) {
             setup();
+            draw();
         }
     }
 }
@@ -199,5 +200,5 @@ class Ball {
 
 function windowResized() {
     resizeCanvas(window.innerWidth, window.innerHeight);
-    setup();
+
 }
