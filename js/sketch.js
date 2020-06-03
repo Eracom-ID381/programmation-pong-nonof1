@@ -34,7 +34,7 @@ function setup() {
     paddles.push(paddleRight);
 
     for (let i = 0; i < 1; i += 1) {
-        balls[i] = new Ball(width / 2, height / 2, 30, random(-10, 10), random(-10, 10));
+        balls[i] = new Ball(width / 2, height / 2, 30, 10, random(-10, 10));
     }
     // let ball = new Ball(0, 0, 10, 0, 40);
 
@@ -164,9 +164,11 @@ class Ball {
     score() {
         if (this.enabled && this.x < 0) {
             scoreRight += 1;
+            this.winner();
             this.resetBall();
         } else if (this.enabled && this.x > width) {
             scoreLeft += 1;
+            this.winner();
             this.resetBall();
         }
     }
@@ -175,6 +177,22 @@ class Ball {
         this.y = height / 2;
         this.speedX = -this.speedX;
         this.speedY = random(-2, 2);
+    }
+    winner() {
+        if (scoreRight > 2) {
+            alert(player2 + ' a gagné !');
+            this.newgame();
+        } else if (scoreLeft > 2) {
+            alert(player1 + ' a gagné');
+            this.newgame();
+        }
+    }
+    newgame() {
+        let x = false;
+        x = confirm('Voulez-vous rejouer ?');
+        if (x == true) {
+            setup();
+        }
     }
 }
 
