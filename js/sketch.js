@@ -1,5 +1,5 @@
-let scoreLeft = 0;
-let scoreRight = 0;
+let scoreLeft;
+let scoreRight;
 let player1;
 let player2;
 
@@ -26,6 +26,8 @@ function setup() {
     noStroke();
     colorMode(HSB, 100);
 
+    scoreLeft = 0;
+    scoreRight = 0;
 
     paddleLeft = new Paddle(30, 0, 20, 150, 'mouseX');
     paddleRight = new Paddle(width - 30, 0, 20, 150, 'mouseY');
